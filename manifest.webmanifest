@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "ExamSprint — JEE + HSC Tracker",
+  "short_name": "ExamSprint",
+  "description": "Personal study tracker for JEE Main, JEE Advanced, MHT-CET and Maharashtra HSC Boards.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F7FF",
+  "theme_color": "#2563EB",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

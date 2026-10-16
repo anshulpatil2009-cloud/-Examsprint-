@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#2563EB">
+<meta name="description" content="A personal JEE, HSC, MHT-CET and JEE Advanced study tracker with chapter deadlines and mock tests.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<title>ExamSprint — JEE + HSC Tracker</title>
+<style>
+:root{--bg:#F4F7FF;--surf:#FFFFFF;--ink:#172554;--mute:#52617A;--line:#D5DFF0;--acc:#2563EB;--accink:#fff;--warn:#EA580C;--ok:#16A34A;--okbg:#E8F8ED;--violet:#7C3AED;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10172A;--surf:#19233A;--ink:#F1F5FF;--mute:#B5C0D8;--line:#33415F;--acc:#60A5FA;--accink:#10203A;--warn:#FB923C;--ok:#4ADE80;--okbg:#17372B;--violet:#A78BFA}}
+:root[data-theme="dark"]{--bg:#10172A;--surf:#19233A;--ink:#F1F5FF;--mute:#B5C0D8;--line:#33415F;--acc:#60A5FA;--accink:#10203A;--warn:#FB923C;--ok:#4ADE80;--okbg:#17372B;--violet:#A78BFA}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Trebuchet MS","Segoe UI",system-ui,sans-serif;padding-bottom:84px}
+main{max-width:560px;margin:0 auto;padding:16px}
+h1{font:700 26px/1.2 Georgia,"Times New Roman",serif;margin:8px 0 4px}
+h2{font:700 19px/1.3 Georgia,serif;margin:20px 0 8px}
+p{margin:4px 0;color:var(--mute)}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0}
+.card.fin{background:var(--okbg);border-color:var(--ok)}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+textarea{min-height:80px}
+button{font:inherit;font-weight:600;border:0;border-radius:8px;padding:10px 14px;background:var(--acc);color:var(--accink);cursor:pointer}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--line)}
+button.small{padding:6px 10px;font-size:14px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--warn);outline-offset:1px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--surf);border-top:1px solid var(--line);display:flex;overflow-x:auto;padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
+nav button{flex:0 0 auto;min-width:68px;background:none;color:var(--mute);border-radius:0;padding:12px 8px;font-size:12px;white-space:nowrap;box-shadow:none}
+nav button[aria-current="true"]{color:var(--acc);box-shadow:inset 0 3px 0 var(--acc)}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc)}
+.bar.full i{background:var(--ok)}
+.seg{display:flex;gap:6px;margin:10px 0}
+.seg button{flex:1;background:var(--surf);color:var(--ink);border:1px solid var(--line);padding:9px 4px;font-size:14px}
+.seg button.sel{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.st{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.st button{background:var(--bg);color:var(--mute);border:1px solid var(--line);padding:8px 2px;font-size:13px}
+.st button.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+.pts{font-weight:700;min-width:48px;text-align:right}
+.done .t{text-decoration:line-through;color:var(--mute)}
+.tag{font-size:13px;color:var(--warn);font-weight:600}
+.rate{display:flex;gap:6px;margin:8px 0}.rate button{flex:1;background:var(--bg);color:var(--ink);border:1px solid var(--line)}.rate button.sel{background:var(--acc);color:var(--accink)}
+.empty{padding:18px 4px;color:var(--mute)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surf);z-index:10}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin:-16px -16px 8px;padding:10px 16px;background:var(--surf);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.top b{flex:1}
+.fire{font-weight:700;filter:grayscale(1);opacity:.7}.fire.hot{filter:none;opacity:1;color:var(--warn)}
+.best{font-size:13px;color:var(--mute)}
+.spider-wrap{display:flex;justify-content:center;align-items:center;overflow:hidden}.spider-wrap svg{width:100%;max-width:340px;height:auto}.backup-actions{display:flex;gap:8px;flex-wrap:wrap}.backup-actions button{flex:1;min-width:120px}.hint{font-size:12px;color:var(--mute)}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric{background:#EAF0FF;border:1px solid #D5DFF0;border-radius:12px;padding:10px}.metric b{display:block;font-size:20px;color:#1D4ED8}.topic-row{border-top:1px solid #E5EAF5;padding:10px 0}.topic-row:first-child{border-top:0}.pill{display:inline-block;border-radius:99px;padding:3px 8px;font-size:12px;font-weight:700;background:#F3E8FF;color:#6D28D9}.checkline{display:flex;align-items:center;gap:8px;margin:8px 0}.checkline input{width:22px;flex:0 0 22px}.danger{background:#FFF1F2;color:#BE123C;border:1px solid #FECDD3;box-shadow:none}
+
+/* BRIGHT BLUE EDITION — force consistent light colours on every device */
+:root{color-scheme:light;--bg:#F4F7FF;--surf:#FFFFFF;--ink:#172554;--mute:#52617A;--line:#D5DFF0;--acc:#2563EB;--accink:#FFFFFF;--warn:#EA580C;--ok:#16A34A;--okbg:#E8F8ED;--violet:#7C3AED}
+body{background:linear-gradient(145deg,#F4F7FF 0%,#EAF0FF 48%,#F7F3FF 100%);color:#172554}
+.top{background:rgba(255,255,255,.97);border-bottom:2px solid #D5DFF0;box-shadow:0 4px 18px rgba(37,99,235,.08)}
+.top b{color:#1D4ED8}
+.card{background:#FFFFFF;border:1px solid #D5DFF0;border-radius:16px;box-shadow:0 4px 16px rgba(37,99,235,.07)}
+.card.fin{background:linear-gradient(135deg,#E8F8ED,#F5FFF8);border:1px solid #16A34A}
+button{background:linear-gradient(135deg,#2563EB,#4F46E5);color:#FFFFFF;box-shadow:0 3px 8px rgba(37,99,235,.16)}
+button.ghost{background:#F0F4FF;color:#2563EB;border:1px solid #C7D7FE;box-shadow:none}
+.seg button.sel{background:linear-gradient(135deg,#2563EB,#7C3AED);color:#FFFFFF;border-color:#4F46E5}
+.st button.on{background:linear-gradient(135deg,#2563EB,#7C3AED);color:#FFFFFF;border-color:#4F46E5}
+.st button{background:#F4F7FF;color:#52617A;border-color:#D5DFF0}
+.rate button.sel{background:#7C3AED;color:#FFFFFF;border-color:#7C3AED}
+.bar{background:#DCE5F7}.bar i{background:linear-gradient(90deg,#2563EB,#7C3AED)}
+.bar.full i{background:linear-gradient(90deg,#16A34A,#4ADE80)}
+.tag{color:#C2410C}
+nav{background:rgba(255,255,255,.98);border-top:1px solid #D5DFF0;box-shadow:0 -5px 18px rgba(37,99,235,.07)}
+nav button{background:transparent;box-shadow:none;color:#52617A}
+nav button[aria-current="true"]{color:#2563EB;box-shadow:inset 0 3px 0 #2563EB}
+input,textarea,select{background:#F8FAFF;border-color:#D5DFF0;color:#172554}
+.spider-wrap svg polygon{fill:#7C3AED;stroke:#2563EB}
+
+.profile-screen{max-width:460px;margin:9vh auto 0;padding:20px}
+.profile-mark{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#2563EB,#7C3AED);display:grid;place-items:center;color:#fff;font-size:28px;font-weight:900;box-shadow:0 8px 20px #2563eb30}
+.profile-screen h1{margin-top:18px}
+.profile-screen .card{padding:18px}
+.profile-screen .hint{line-height:1.6}
+.profile-switch{font-size:12px;padding:6px 9px;white-space:nowrap}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav id="nav"></nav>
+<script>
+// JEE + Maharashtra HSC tracker. Historical PYQ trends are computed from user-entered records only.
+const SYL={
+Physics:["Units and Measurements","Kinematics","Laws of Motion","Work, Energy and Power","Centre of Mass and Collisions","Rotational Motion","Gravitation","Mechanical Properties of Solids","Fluid Mechanics","Thermal Properties and Calorimetry","Thermodynamics","Kinetic Theory of Gases","Oscillations (SHM)","Waves and Sound","Electrostatics","Capacitors","Current Electricity","Magnetic Effects of Current","Magnetism and Matter","Electromagnetic Induction","Alternating Current","Electromagnetic Waves|mc","Ray Optics","Wave Optics","Dual Nature of Matter and Radiation","Atoms and Nuclei","Semiconductor Devices|mc","Communication Systems|mc","Experimental Skills|ma"],
+Chemistry:["Some Basic Concepts of Chemistry","Atomic Structure","Periodic Table and Periodicity","Chemical Bonding","States of Matter","Chemical Thermodynamics","Chemical Equilibrium","Ionic Equilibrium","Redox Reactions","Solutions","Electrochemistry","Chemical Kinetics","Surface Chemistry|mc","Solid State","s-Block Elements","p-Block Elements","d and f Block Elements","Coordination Compounds","Metallurgy and Hydrogen|mc","Qualitative Analysis|ma","General Organic Chemistry","Isomerism","Purification and Analysis of Organic Compounds|mc","Hydrocarbons","Haloalkanes and Haloarenes","Alcohols, Phenols and Ethers","Aldehydes and Ketones","Carboxylic Acids","Amines","Biomolecules","Polymers","Chemistry in Everyday Life|mc","Environmental Chemistry|mc"],
+Maths:["Sets and Relations","Functions","Complex Numbers","Quadratic Equations","Sequences and Series","Permutations and Combinations","Binomial Theorem","Matrices","Determinants","Trigonometric Ratios and Identities","Trigonometric Equations","Inverse Trigonometric Functions","Straight Lines","Circles","Parabola","Ellipse","Hyperbola","Limits and Continuity","Differentiability","Application of Derivatives","Indefinite Integration","Definite Integration","Area Under Curves","Differential Equations","Vector Algebra","3D Geometry","Probability","Statistics|mc","Mathematical Reasoning|mc"]};
+const EX={m:"JEE Main",a:"JEE Adv",c:"MHT CET",b:"HSC 12th"};
+const C12=new Set(["Rotational Motion","Fluid Mechanics","Thermodynamics","Kinetic Theory of Gases","Oscillations (SHM)","Waves and Sound","Electrostatics","Current Electricity","Magnetic Effects of Current","Magnetism and Matter","Electromagnetic Induction","Alternating Current","Wave Optics","Dual Nature of Matter and Radiation","Atoms and Nuclei","Semiconductor Devices","Solid State","Solutions","Chemical Thermodynamics","Electrochemistry","Chemical Kinetics","p-Block Elements","d and f Block Elements","Coordination Compounds","Haloalkanes and Haloarenes","Alcohols, Phenols and Ethers","Aldehydes and Ketones","Carboxylic Acids","Amines","Biomolecules","Polymers","Chemistry in Everyday Life","Matrices","Determinants","Inverse Trigonometric Functions","Circles","Parabola","Ellipse","Hyperbola","Limits and Continuity","Differentiability","Application of Derivatives","Indefinite Integration","Definite Integration","Area Under Curves","Differential Equations","Vector Algebra","3D Geometry","Probability","Mathematical Reasoning"]);
+const STG=["Theory","Questions","Rev 1","Rev 2"];
+let S={exam:"m",ch:{},rv:{},nc:{},pq:{},days:{},mocks:[],mist:[],target:"",tasks:[],journal:[],board:{},boardMocks:[],pyqRecords:[],roadmap:{}},tab="home",sub="Physics",rating=0,mode="ch",aS="Physics",aC="",aG=0,lastDay="",boardSub="Physics",pyqSub="Physics";
+const freshState=()=>({exam:"m",ch:{},rv:{},nc:{},pq:{},days:{},mocks:[],mist:[],target:"",tasks:[],journal:[],board:{},boardMocks:[],pyqRecords:[],roadmap:{}});
+let profileName=localStorage.getItem("pcmProfileName")||"",profileKey="";
+const profileStorageKey=name=>"pcm1_profile_"+name.toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
+function normalizeState(){if(!S.roadmap)S.roadmap={};if(!S.board)S.board={};if(!S.boardMocks)S.boardMocks=[];if(!S.pyqRecords)S.pyqRecords=[];if(!S.tasks)S.tasks=[];if(!S.journal)S.journal=[];}
+function loadProfile(name){const clean=String(name||"").trim().slice(0,32);if(!clean)return;profileName=clean;profileKey=profileStorageKey(clean);try{localStorage.setItem("pcmProfileName",clean);const saved=localStorage.getItem(profileKey);if(saved)S=Object.assign(freshState(),JSON.parse(saved));else if(clean.toLowerCase()==="anshul"&&localStorage.getItem("pcm1")){S=Object.assign(freshState(),JSON.parse(localStorage.getItem("pcm1")));localStorage.setItem(profileKey,JSON.stringify(S));}else S=freshState();normalizeState();}catch(e){S=freshState();normalizeState()}render()}
+function switchProfile(){save();profileName="";profileKey="";try{localStorage.removeItem("pcmProfileName")}catch(e){}render()}
+const save=()=>{if(!profileKey)return false;try{localStorage.setItem(profileKey,JSON.stringify(S));return true}catch(e){console.warn("Tracker could not save to browser storage",e);return false}};
+if(profileName){const saved=localStorage.getItem(profileStorageKey(profileName));if(saved){try{S=Object.assign(freshState(),JSON.parse(saved));normalizeState()}catch(e){S=freshState()}}else if(profileName.toLowerCase()==="anshul"&&localStorage.getItem("pcm1")){try{S=Object.assign(freshState(),JSON.parse(localStorage.getItem("pcm1")));normalizeState();localStorage.setItem(profileStorageKey(profileName),JSON.stringify(S))}catch(e){}}profileKey=profileStorageKey(profileName)}
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const today=()=>ymd(new Date());
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const $=id=>document.getElementById(id);
+const parse=s=>{const[n,f]=s.split("|");return{n,f:f||"mac"}};
+const list=su=>SYL[su].map(parse).filter(c=>S.exam==="b"?C12.has(c.n):c.f.includes(S.exam));
+const key=(su,n)=>su+"|"+n;
+const bits=(su,n)=>S.ch[key(su,n)]||"0000";
+const count=su=>list(su).reduce((a,c)=>a+[...bits(su,c.n)].filter(x=>x==="1").length,0);
+const backlog=()=>S.tasks.filter(t=>t.date<today()&&!t.done);
+const sum=l=>l.reduce((a,t)=>a+t.pts,0);
+
+function setTab(t){tab=t;render()}
+function render(){
+  if(!profileName){$("nav").innerHTML="";$("app").innerHTML=profileChooser();return}
+  const nb=backlog().length;
+  const tabs=[["home","Home"],["syl","Syllabus"],["plan","Today"+(nb?" ·"+nb:"")],["board","Boards"],["road","Roadmap"],["rev","Revise"],["test","Tests"],["jour","Journal"]];
+  $("nav").innerHTML=tabs.map(([k,l])=>`<button aria-current="${tab===k}" onclick="setTab('${k}')">${l}</button>`).join("");
+  const views={home:vHome,syl:vSyl,board:vBoard,road:vRoad,rev:vRev,test:vTest,plan:vPlan,back:vBack,jour:vJour};
+  $("app").innerHTML=topBar()+(views[tab]||vHome)();
+}
+
+function vSyl(){
+  const subs=Object.keys(SYL);
+  let tot=0,got=0;
+  const per=subs.map(su=>{const n=list(su).length*4,g=count(su);tot+=n;got+=g;return{su,n,g}});
+  const pct=tot?Math.round(got/tot*100):0;
+  const cur=per.find(p=>p.su===sub);
+  return `<h1>Syllabus</h1>
+  <div class="seg" role="group" aria-label="Exam">${Object.entries(EX).map(([k,l])=>`<button class="${S.exam===k?"sel":""}" onclick="S.exam='${k}';save();render()">${l}</button>`).join("")}</div>
+  <div class="card"><div class="row"><b class="grow">${EX[S.exam]} overall</b><b>${pct}%</b></div><div class="bar ${pct===100?"full":""}" style="margin-top:8px"><i style="width:${pct}%"></i></div>
+  <p>${got} of ${tot} stages done</p></div>
+  <div class="seg" role="group" aria-label="Subject">${per.map(p=>`<button class="${sub===p.su?"sel":""}" onclick="sub='${p.su}';render()">${p.su} ${Math.round(p.g/p.n*100)}%</button>`).join("")}</div>
+  ${list(sub).map(c=>{const b=bits(sub,c.n),fin=b==="1111";return `<div class="card ${fin?"fin":""}"><div class="row"><b class="grow">${esc(c.n)}</b>${fin?`<span class="tag" style="color:var(--ok)">Done</span>`:""}</div>
+  <div class="st">${STG.map((s,i)=>`<button class="${b[i]==="1"?"on":""}" aria-pressed="${b[i]==="1"}" data-s="${esc(sub)}" data-n="${esc(c.n)}" data-i="${i}" onclick="stage(this)">${b[i]==="1"?"✓ ":""}${s}</button>`).join("")}</div><div class="st" style="grid-template-columns:1fr 1fr">${[["nc","📖 NCERT read"],["pq","🎯 PYQs solved"]].map(([k,l])=>`<button class="${S[k][key(sub,c.n)]?"on":""}" aria-pressed="${!!S[k][key(sub,c.n)]}" data-s="${esc(sub)}" data-n="${esc(c.n)}" data-k="${k}" onclick="xt(this)">${l}</button>`).join("")}</div></div>`}).join("")}`;
+}
+function stage(el){
+  const su=el.dataset.s,n=el.dataset.n,i=+el.dataset.i;setBit(su,n,i,bits(su,n)[i]==="1"?"0":"1");save();
+  const y=scrollY;render();scrollTo(0,y);
+}
+
+function vPlan(){
+  const l=S.tasks.filter(t=>t.date===today()),total=sum(l),locked=total===100,done=sum(l.filter(t=>t.done));
+  const opts=Object.keys(SYL).flatMap(su=>list(su).flatMap(c=>STG.map(s=>`${su}: ${c.n} (${s})`)));
+  return `<h1>Today</h1><p>${new Date().toDateString()}</p>
+  <div class="card"><div class="row"><b class="grow">${total}/100 points planned</b><div class="pts">${done} earned</div></div>
+  <div class="bar ${locked?"full":""}" style="margin-top:8px"><i style="width:${Math.min(total,100)}%"></i></div>
+  <p>${locked?"Plan complete. Tick tasks as you finish.":total>100?"Over by "+(total-100)+". Lower some points.":"Add tasks until points reach exactly 100. Ticking unlocks then."}</p></div>
+  ${l.length?l.map(t=>`<div class="card row ${t.done?"done":""}"><input type="checkbox" style="width:24px;height:24px" ${t.done?"checked":""} ${locked?"":"disabled"} onchange="toggle('${t.id}')" aria-label="Done"><div class="grow t">${esc(t.title)}</div><div class="pts">${t.pts}</div><button class="ghost small" onclick="del('${t.id}')" aria-label="Delete task">✕</button></div>`).join(""):`<div class="empty">No tasks yet. Add your first one below.</div>`}
+  ${addUI(total)}${vBack()}`;
+}
+function addUI(total){
+  const rest=Math.max(0,100-total)||"",chs=list(aS);
+  if(!chs.some(c=>c.n===aC))aC=chs[0].n;
+  return `<h2>Add task</h2><div class="seg" role="group" aria-label="Task type"><button class="${mode==="ch"?"sel":""}" onclick="mode='ch';render()">From chapter</button><button class="${mode==="own"?"sel":""}" onclick="mode='own';render()">Write my own</button></div><div class="card">`+(mode==="ch"?`<div class="seg" style="margin-top:0">${Object.keys(SYL).map(su=>`<button class="${aS===su?"sel":""}" onclick="aS='${su}';aC='';render()">${su}</button>`).join("")}</div><select id="ac" aria-label="Chapter" onchange="aC=this.value">${chs.map(c=>`<option ${c.n===aC?"selected":""}>${esc(c.n)}</option>`).join("")}</select><select id="ag" aria-label="Stage" style="margin-top:8px" onchange="aG=+this.value">${STG.map((s,i)=>`<option value="${i}" ${i===aG?"selected":""}>${s}</option>`).join("")}</select>`:`<input id="tt" placeholder="Type your own task" aria-label="Task">`)+`<div class="row" style="margin-top:8px"><input id="tpts" type="number" min="1" max="100" placeholder="Points" value="${rest}" aria-label="Points"><button onclick="addTask()">Add task</button></div></div>`;
+}
+function addTask(){const pts=parseInt($("tpts").value);if(!pts||pts<1)return;let title,ref=null;
+  if(mode==="ch"){const n=$("ac").value,i=+$("ag").value;title=`${aS}: ${n} (${STG[i]})`;ref={su:aS,n,i}}else{title=$("tt").value.trim();if(!title)return}
+  S.tasks.push({id:uid(),date:today(),title,pts,done:false,ref});mark();save();render()}
+function toggle(id){const t=S.tasks.find(x=>x.id===id);t.done=!t.done;if(t.ref)setBit(t.ref.su,t.ref.n,t.ref.i,t.done?"1":"0");mark();save();render()}
+const pd=s=>{const d=new Date(s+"T00:00:00");d.setDate(d.getDate()-1);return ymd(d)};
+function streak(){let c=0,d=today();if(!S.days[d])d=pd(d);while(S.days[d]){c++;d=pd(d)}return c}
+function best(){let b=0,c=0,p=null;for(const d of Object.keys(S.days).sort()){c=(p&&pd(d)===p)?c+1:1;b=Math.max(b,c);p=d}return b}
+function mark(){const l=S.tasks.filter(t=>t.date===today());if(l.length&&sum(l)===100&&l.every(t=>t.done))S.days[today()]=true;else delete S.days[today()]}
+function topBar(){const s=streak(),ok=!!S.days[today()];return `<div class="top"><b>ExamSprint <span style="font-size:12px;color:#52617A;font-weight:600">· ${esc(profileName)}</span></b><span class="fire ${ok?"hot":""}" aria-label="Streak">🔥 ${s}</span><span class="best">Best ${best()}</span><button class="ghost profile-switch" onclick="switchProfile()" aria-label="Switch student profile">Switch</button></div>`}
+function profileChooser(){return `<section class="profile-screen"><div class="profile-mark">E</div><h1>Welcome to ExamSprint</h1><p>One tracker for JEE Main, JEE Advanced, MHT-CET and HSC Boards.</p><div class="card" style="margin-top:20px"><label for="profileNameInput"><b>Your name</b></label><p class="hint" style="margin:4px 0 10px">Enter your name to open your personal tracker. Each name keeps separate progress on this device.</p><input id="profileNameInput" maxlength="32" autocomplete="name" placeholder="Enter your name" value="${esc(profileName)}" onkeydown="if(event.key==='Enter')startProfile()"><button style="width:100%;margin-top:12px" onclick="startProfile()">Open my tracker</button></div><p class="hint">Your study data is saved in this browser on this device. To move it to another device, export a backup from Home and restore it there.</p><p class="hint">App updates are controlled by the app owner. Other students can use the tracker but cannot publish changes to the app.</p></section>`}
+function startProfile(){const el=$("profileNameInput");if(el)loadProfile(el.value)}
+function setRv(su,n,j,v){const k=key(su,n),r=[...(S.rv[k]||"00000")];r[j]=v;S.rv[k]=r.join("");if(j<2){const a=[...(S.ch[k]||"0000")];a[2+j]=v;S.ch[k]=a.join("")}}
+function setBit(su,n,i,v){if(i>=2)return setRv(su,n,i-2,v);const k=key(su,n),a=[...(S.ch[k]||"0000")];a[i]=v;S.ch[k]=a.join("")}
+function rv(el){const su=el.dataset.s,n=el.dataset.n,j=+el.dataset.j,r=S.rv[key(su,n)]||"00000";setRv(su,n,j,r[j]==="1"?"0":"1");save();const y=scrollY;render();scrollTo(0,y)}
+function xt(el){const k=key(el.dataset.s,el.dataset.n),f=el.dataset.k;S[f][k]=S[f][k]?0:1;save();const y=scrollY;render();scrollTo(0,y)}
+function cd(){const t=S.target,L=t?Math.ceil((new Date(t+"T00:00:00")-new Date(today()+"T00:00:00"))/864e5):null;
+  let tot=0,got=0,n=0,nc=0,pq=0;Object.keys(SYL).forEach(su=>{tot+=list(su).length*4;got+=count(su);list(su).forEach(c=>{n++;nc+=S.nc[key(su,c.n)]?1:0;pq+=S.pq[key(su,c.n)]?1:0})});
+  const rem=tot-got;
+  return `<div class="card"><div class="row"><b class="grow">Exam countdown</b><input type="date" value="${t}" style="width:auto" onchange="S.target=this.value;save();render()" aria-label="Exam date"></div>${L!==null&&L>=0?`<p><b style="color:var(--acc);font-size:24px">${L}</b> days left. Finish about <b>${(rem/Math.max(L,1)).toFixed(1)}</b> chapter stages a day (${rem} left).</p>`:`<p>Set your exam date to see days left and daily pace.</p>`}<p>📖 NCERT read ${nc}/${n} · 🎯 PYQs solved ${pq}/${n}</p></div>`}
+const WHY=["Concept gap","Calculation","Silly slip","Time pressure","Guess"];
+function vTest(){
+  const m=S.mocks.slice().reverse(),mi=S.mist.slice().reverse(),open=S.mist.filter(x=>!x.fix).length,l3=S.mocks.slice(-3).map(x=>x.s/x.o*100),av=l3.length?Math.round(l3.reduce((a,b)=>a+b)/l3.length):null,cnt={};
+  S.mist.filter(x=>!x.fix).forEach(x=>cnt[x.why]=(cnt[x.why]||0)+1);
+  const opts=Object.keys(SYL).flatMap(su=>list(su).map(c=>`<option value="${esc(c.n)}">`)).join("");
+  return `<h1>Tests</h1><p>Mock tests and a mistake notebook. With 70 to 80 days left, quality of practice beats quantity.</p>
+  <h2>Mock tests${av!==null?" · last 3 avg "+av+"%":""}</h2>
+  <div class="card"><input id="mn" placeholder="Test name" aria-label="Test name"><div class="row" style="margin-top:8px"><input id="ms" type="number" placeholder="Score" aria-label="Score"><input id="mo" type="number" value="300" aria-label="Out of"></div><button style="margin-top:8px" onclick="addM()">Save mock</button></div>
+  ${m.slice(0,5).map(x=>`<div class="card row"><div class="grow">${esc(x.n)}<p>${x.d}</p></div><b>${x.s}/${x.o} · ${Math.round(x.s/x.o*100)}%</b></div>`).join("")}
+  <h2>Mistake notebook · ${open} to fix</h2>${Object.keys(cnt).length?`<p>Biggest causes: ${Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+" "+v).join(", ")}</p>`:""}
+  <div class="card"><input id="xc" list="xl" placeholder="Chapter" aria-label="Chapter"><datalist id="xl">${opts}</datalist><select id="xw" style="margin-top:8px" aria-label="Reason">${WHY.map(w=>`<option>${w}</option>`).join("")}</select><input id="xn" style="margin-top:8px" placeholder="What went wrong? What is the fix?" aria-label="Note"><button style="margin-top:8px" onclick="addX()">Add mistake</button></div>
+  ${mi.slice(0,15).map(x=>`<div class="card row ${x.fix?"done":""}"><input type="checkbox" style="width:24px;height:24px" ${x.fix?"checked":""} onchange="fixX('${x.id}')" aria-label="Fixed"><div class="grow t">${esc(x.c)} · <span class="tag">${x.why}</span><p>${esc(x.note)}</p></div></div>`).join("")}`;
+}
+function addM(){const n=$("mn").value.trim(),s=parseFloat($("ms").value),o=parseFloat($("mo").value)||300;if(!n||isNaN(s))return;S.mocks.push({n,s,o,d:today()});save();render()}
+function addX(){const c=$("xc").value.trim();if(!c)return;S.mist.push({id:uid(),c,why:$("xw").value,note:$("xn").value.trim(),fix:false,d:today()});save();render()}
+function fixX(id){const x=S.mist.find(y=>y.id===id);x.fix=!x.fix;save();render()}
+const BOARD_STAGES=["Textbook / notes","Written answers","Numericals / derivations","Board PYQs","Timed practice"];
+const BOARD_SUBJECTS={
+  Physics:["Rotational Motion","Mechanical Properties of Fluids","Thermal Properties of Matter","Thermodynamics","Kinetic Theory of Gases","Oscillations","Waves","Electrostatics","Current Electricity","Magnetic Effects of Current","Magnetism","Electromagnetic Induction","Alternating Current","Electromagnetic Waves","Ray Optics","Wave Optics","Dual Nature of Radiation and Matter","Atoms and Nuclei","Semiconductor Devices","Practical / diagrams"],
+  Chemistry:["Solid State","Solutions","Ionic Equilibria","Chemical Thermodynamics","Electrochemistry","Chemical Kinetics","Elements of Groups 16, 17 and 18","Transition and Inner Transition Elements","Coordination Compounds","Halogen Derivatives","Alcohols, Phenols and Ethers","Aldehydes, Ketones and Carboxylic Acids","Amines","Biomolecules","Introduction to Polymer Chemistry","Green Chemistry and Nanochemistry","Practical / salt analysis"],
+  Maths:["Mathematical Logic","Matrices","Trigonometric Functions","Pair of Straight Lines","Vectors","Line and Plane","Linear Programming Problems","Differentiation","Applications of Derivatives","Indefinite Integration","Definite Integration","Application of Definite Integration","Differential Equations","Probability Distributions","Binomial Distribution","Practise full-length papers"],
+  English:["Prose","Poetry","Writing Skills","Novel / supplementary reading","Grammar","Reading comprehension","Timed paper practice"]
+};
+function boardKey(su,ch,st){return su+"|"+ch+"|"+st}
+function boardDone(su,ch,st){return !!S.board[boardKey(su,ch,st)]}
+function setBoard(el){const k=el.dataset.bkey;S.board[k]=el.checked?1:0;save();const y=window.scrollY;render();window.scrollTo(0,y)}
+function vBoard(){
+  const subjects=Object.keys(BOARD_SUBJECTS),subj=BOARD_SUBJECTS[boardSub]||BOARD_SUBJECTS.Physics;
+  const total=subjects.reduce((a,su)=>a+BOARD_SUBJECTS[su].length*BOARD_STAGES.length,0);
+  const done=subjects.reduce((a,su)=>a+BOARD_SUBJECTS[su].reduce((n,ch)=>n+BOARD_STAGES.reduce((q,st)=>q+(boardDone(su,ch,st)?1:0),0),0),0);
+  const pct=Math.round(done/total*100);
+  const checks=subj.reduce((a,ch)=>a+BOARD_STAGES.reduce((n,st)=>n+(boardDone(boardSub,ch,st)?1:0),0),0);
+  const boardMocks=(S.boardMocks||[]).slice().reverse();
+  return `<h1>HSC Boards</h1><p>Separate board-focused tracking alongside your JEE preparation. Use your current Maharashtra HSC syllabus and textbook as the source of truth.</p>
+  <div class="card"><div class="row"><b class="grow">Overall board preparation</b><b>${pct}%</b></div><div class="bar" style="margin-top:8px"><i style="width:${pct}%;background:linear-gradient(90deg,#16A34A,#4ADE80)"></i></div><p>${done} of ${total} board-preparation checkpoints complete.</p></div>
+  <div class="seg">${subjects.map(su=>`<button class="${boardSub===su?'sel':''}" onclick="boardSub='${su}';render()">${su}</button>`).join('')}</div>
+  <div class="card"><div class="row"><b class="grow">${boardSub}</b><b>${checks}/${subj.length*BOARD_STAGES.length}</b></div><p>Tick only after you have actually completed the work.</p></div>
+  ${subj.map(ch=>{const n=BOARD_STAGES.reduce((a,st)=>a+(boardDone(boardSub,ch,st)?1:0),0);return `<div class="card"><div class="row"><b class="grow">${esc(ch)}</b><span class="pill">${n}/${BOARD_STAGES.length}</span></div>${BOARD_STAGES.map(st=>`<label class="checkline"><input type="checkbox" data-bkey="${esc(boardKey(boardSub,ch,st))}" ${boardDone(boardSub,ch,st)?'checked':''} onchange="setBoard(this)"><span>${st}</span></label>`).join('')}</div>`}).join('')}
+  <h2>Board mock papers</h2><div class="card"><input id="bmname" placeholder="Paper / subject name"><div class="row" style="margin-top:8px"><input id="bmscore" type="number" min="0" placeholder="Marks scored"><input id="bmoutof" type="number" min="1" value="100" placeholder="Out of"></div><button style="margin-top:8px" onclick="addBoardMock()">Save board score</button></div>
+  ${boardMocks.slice(0,8).map(m=>`<div class="card row"><div class="grow"><b>${esc(m.name)}</b><p>${m.date}</p></div><b>${m.score}/${m.outof} (${Math.round(100*m.score/m.outof)}%)</b></div>`).join('')||'<p class="empty">No board papers recorded yet.</p>'}`;
+}
+function addBoardMock(){const name=$('bmname').value.trim(),score=Number($('bmscore').value),outof=Number($('bmoutof').value)||100;if(!name||$('bmscore').value===''||score<0||score>outof)return alert('Enter a valid paper name and score.');S.boardMocks=S.boardMocks||[];S.boardMocks.push({id:uid(),name,score,outof,date:today()});save();render()}
+function vPyq(){
+  const recs=S.pyqRecords||[],subj=pyqSub,filtered=recs.filter(r=>r.subject===subj);
+  const groups={};filtered.forEach(r=>{const k=r.chapter;groups[k]=groups[k]||{count:0,correct:0,attempted:0,marks:0,topics:{}};groups[k].count+=Number(r.count)||0;groups[k].correct+=Number(r.correct)||0;groups[k].attempted+=Number(r.attempted)||0;groups[k].marks+=Number(r.marks)||0;groups[k].topics[r.topic||'Unspecified']=(groups[k].topics[r.topic||'Unspecified']||0)+(Number(r.count)||0)});
+  const ranked=Object.entries(groups).sort((a,b)=>b[1].count-a[1].count);
+  const allCount=filtered.reduce((a,r)=>a+(Number(r.count)||0),0);
+  const allAttempted=filtered.reduce((a,r)=>a+(Number(r.attempted)||0),0),allCorrect=filtered.reduce((a,r)=>a+(Number(r.correct)||0),0);
+  const years=[...new Set(filtered.map(r=>r.year))].filter(Boolean).sort();
+  const opts=Object.keys(SYL).flatMap(su=>SYL[su].map(parse).map(c=>`<option value="${esc(c.n)}">${su} — ${esc(c.n)}</option>`)).join('');
+  return `<h1>PYQ Weightage Analyzer</h1><p>Build your own verified dataset from past papers. This page calculates trends only from records you enter; it does not invent chapter weightage or claim predictions.</p>
+  <div class="mini-grid"><div class="metric"><b>${allCount}</b><span>Questions logged</span></div><div class="metric"><b>${years.length?years.join(', '):'—'}</b><span>Years covered</span></div><div class="metric"><b>${allAttempted?Math.round(allCorrect/allAttempted*100)+'%':'—'}</b><span>Accuracy on logged attempts</span></div><div class="metric"><b>${ranked.length}</b><span>Chapters tracked</span></div></div>
+  <div class="seg">${['Physics','Chemistry','Maths'].map(su=>`<button class="${pyqSub===su?'sel':''}" onclick="pyqSub='${su}';render()">${su}</button>`).join('')}</div>
+  <h2>Add a PYQ analysis record</h2><div class="card"><label>Exam / paper</label><input id="pyqpaper" placeholder="e.g. JEE Main Jan 2025 Shift 1"><div class="row" style="margin-top:8px"><input id="pyqyear" type="number" min="2000" max="2100" placeholder="Year"><input id="pyqsession" placeholder="Session / shift"></div><label>Chapter</label><input id="pyqchapter" list="pyqchapters" placeholder="Choose or type chapter" style="margin-top:8px"><datalist id="pyqchapters">${opts}</datalist><label>Topic (optional)</label><input id="pyqtopic" placeholder="e.g. Kirchhoff's laws" style="margin-top:8px"><div class="row" style="margin-top:8px"><input id="pyqcount" type="number" min="1" value="1" placeholder="Questions in paper"><input id="pyqmarks" type="number" min="0" value="4" placeholder="Marks represented"></div><div class="row" style="margin-top:8px"><input id="pyqattempted" type="number" min="0" value="1" placeholder="Attempted by you"><input id="pyqcorrect" type="number" min="0" value="0" placeholder="Correct by you"></div><button style="margin-top:10px" onclick="addPyq()">Save PYQ record</button><p class="hint">Record one chapter/topic per paper. Question count is the number in that paper; attempted/correct are your own practice results.</p></div>
+  <h2>Chapter frequency — ${subj}</h2><p class="hint">Based only on ${filtered.length} record(s) across ${years.length} year(s). Frequency is not a guarantee of future papers.</p>
+  ${ranked.map(([ch,g],i)=>`<div class="topic-row"><div class="row"><b class="grow">${i+1}. ${esc(ch)}</b><span class="pill">${g.count} Q</span></div><div class="bar" style="margin:6px 0"><i style="width:${allCount?Math.round(g.count/allCount*100):0}%;background:linear-gradient(90deg,#2563EB,#7C3AED)"></i></div><p>${allCount?Math.round(g.count/allCount*100):0}% of logged ${subj} questions · ${g.attempted?Math.round(g.correct/g.attempted*100)+'% personal accuracy':'no attempts logged'} · ${g.marks} marks represented</p><p class="hint">Topics: ${Object.entries(g.topics).map(([t,n])=>esc(t)+' ('+n+')').join(', ')}</p></div>`).join('')||'<p class="empty">No records yet. Add PYQ records from papers you have actually solved.</p>'}
+  <h2>Recent records</h2>${filtered.slice().reverse().slice(0,20).map(r=>`<div class="card"><div class="row"><div class="grow"><b>${esc(r.chapter)}</b><p>${esc(r.paper)} · ${r.year||'Year not set'} ${r.session?'· '+esc(r.session):''}</p><p>${esc(r.topic||'Topic not specified')} · ${r.count} question(s)</p></div><button class="danger small" onclick="deletePyq('${r.id}')">Delete</button></div></div>`).join('')||'<p class="empty">No records yet.</p>'}`;
+}
+function addPyq(){const paper=$('pyqpaper').value.trim(),year=$('pyqyear').value,session=$('pyqsession').value.trim(),chapter=$('pyqchapter').value.trim(),topic=$('pyqtopic').value.trim(),count=Number($('pyqcount').value)||0,marks=Number($('pyqmarks').value)||0,attempted=Number($('pyqattempted').value)||0,correct=Number($('pyqcorrect').value)||0;if(!paper||!chapter||count<1||attempted<correct||correct<0)return alert('Enter paper, chapter, a positive question count, and valid attempt/correct values.');S.pyqRecords=S.pyqRecords||[];S.pyqRecords.push({id:uid(),subject:pyqSub,paper,year,session,chapter,topic,count,marks,attempted,correct,date:today()});save();render()}
+function deletePyq(id){if(!confirm('Delete this PYQ record?'))return;S.pyqRecords=S.pyqRecords.filter(r=>r.id!==id);save();render()}
+
+// Deadline roadmap: suggested planning dates, not official exam dates. Update dates when official notices are released.
+let roadExam="m",roadSub="Physics";
+const ROAD_TRACKS={
+  m:{name:"JEE Main",start:"2026-10-19",end:"2026-12-20",mockStart:"2026-10-25",mockEnd:"2027-01-17",note:"First priority: broad syllabus coverage, timed PYQs, then full-paper speed and accuracy."},
+  b:{name:"HSC Boards",start:"2026-10-19",end:"2027-01-25",mockStart:"2027-01-10",mockEnd:"2027-02-20",note:"Use your current Maharashtra HSC textbook and official syllabus. Practise written answers, derivations, diagrams and full papers."},
+  c:{name:"MHT-CET",start:"2027-02-22",end:"2027-04-11",mockStart:"2027-03-07",mockEnd:"2027-04-25",note:"After the board-focused period, prioritise speed, formula recall, chapter tests and full-length PCM mocks."},
+  a:{name:"JEE Advanced",start:"2027-02-22",end:"2027-04-25",mockStart:"2027-03-14",mockEnd:"2027-05-09",note:"Build deeper multi-concept problem solving after JEE Main; keep this track flexible around the official exam calendar."}
+};
+function dateAdd(iso,days){const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+days);return ymd(d)}
+function dateSpan(start,end,n,i){const a=new Date(start+'T12:00:00').getTime(),b=new Date(end+'T12:00:00').getTime();return ymd(new Date(a+(n<=1?0:(b-a)*i/(n-1))));}
+function roadChapters(track){
+ const bySubject=track==='b'
+  ?Object.entries(BOARD_SUBJECTS).map(([subject,chapters])=>({subject,chapters:chapters.map(chapter=>({chapter}))}))
+  :Object.keys(SYL).map(subject=>({subject,chapters:SYL[subject].map(parse).filter(c=>track==='m'?c.f.includes('m'):track==='c'?c.f.includes('c')||c.f==='mac':track==='a'?c.f.includes('a')||c.f==='mac':true)}));
+ // Interleave subjects so one subject does not receive all the earliest deadlines.
+ const out=[];let depth=0,remaining=true;
+ while(remaining){remaining=false;for(const group of bySubject){if(depth<group.chapters.length){const c=group.chapters[depth];out.push({subject:group.subject,chapter:c.chapter||c.n,seq:depth});remaining=true;}}depth++;}
+ return out;
+}
+function ensureRoadmap(){
+ if(!S.roadmap)S.roadmap={};
+ for(const track of Object.keys(ROAD_TRACKS)){
+  const cfg=ROAD_TRACKS[track],chapters=roadChapters(track);
+  chapters.forEach((c,i)=>{const id=track+'|'+c.subject+'|'+c.chapter;if(!S.roadmap[id])S.roadmap[id]={id,track,subject:c.subject,chapter:c.chapter,due:dateSpan(cfg.start,cfg.end,chapters.length,i),done:false,type:'chapter'};});
+  const first=new Date(cfg.mockStart+'T12:00:00'),last=new Date(cfg.mockEnd+'T12:00:00');
+  let idx=0;for(let d=new Date(first);d<=last;d.setDate(d.getDate()+7)){const id=track+'|mock|'+ymd(d);if(!S.roadmap[id])S.roadmap[id]={id,track,subject:'Mock Test',chapter:track==='b'?'Timed board paper':(track==='a'?'JEE Advanced full/part mock':track==='c'?'MHT-CET PCM mock':'JEE Main full/part mock'),due:ymd(d),done:false,type:'mock',seq:idx};idx++;}
+ }
+}
+function setRoadDone(id,checked){S.roadmap[id].done=checked;save();render()}
+function setRoadDate(id,value){if(!value)return;S.roadmap[id].due=value;save();render()}
+function vRoad(){
+ ensureRoadmap();
+ const cfg=ROAD_TRACKS[roadExam],items=Object.values(S.roadmap).filter(x=>x.track===roadExam),chapters=items.filter(x=>x.type==='chapter'),mocks=items.filter(x=>x.type==='mock');
+ const done=chapters.filter(x=>x.done).length,mdone=mocks.filter(x=>x.done).length,overdue=items.filter(x=>!x.done&&x.due<today()).length;
+ const subjects=roadExam==='b'?Object.keys(BOARD_SUBJECTS):Object.keys(SYL);
+ const selected=chapters.filter(x=>x.subject===roadSub).sort((a,b)=>a.due.localeCompare(b.due)||a.chapter.localeCompare(b.chapter));
+ const next=items.filter(x=>!x.done).sort((a,b)=>a.due.localeCompare(b.due))[0];
+ const renderItem=x=>`<div class="card ${x.done?'fin':''}"><label class="checkline"><input type="checkbox" ${x.done?'checked':''} onchange="setRoadDone('${x.id.replace(/'/g,"\\'")}',this.checked)"><span class="grow"><b>${esc(x.chapter)}</b><span class="pill" style="margin-left:6px">${x.type==='mock'?'MOCK':'CHAPTER'}</span></span></label><div class="row" style="margin-top:6px"><span class="hint grow">${esc(x.subject)} · ${x.done?'Completed':(x.due<today()?'Overdue':x.due===today()?'Due today':'Deadline')}</span><input aria-label="Deadline for ${esc(x.chapter)}" type="date" value="${x.due}" style="max-width:155px;padding:7px" onchange="setRoadDate('${x.id.replace(/'/g,"\\'")}',this.value)"></div></div>`;
+ return `<h1>Exam Deadline Roadmap</h1><p>One sequence-based plan for multiple exams, with chapter deadlines and mock tests. These are suggested planning deadlines, not official exam dates; adjust them when official notices arrive or if your pace differs.</p>
+ <div class="seg">${[['m','JEE Main'],['b','HSC Boards'],['c','MHT-CET'],['a','JEE Advanced']].map(([k,n])=>`<button class="${roadExam===k?'sel':''}" onclick="roadExam='${k}';roadSub='${k==='b'?'Physics':'Physics'}';render()">${n}</button>`).join('')}</div>
+ <div class="card"><div class="row"><b class="grow">${cfg.name} plan</b><span class="pill">${done}/${chapters.length} chapters</span></div><div class="bar" style="margin:8px 0"><i style="width:${chapters.length?Math.round(done/chapters.length*100):0}%;background:linear-gradient(90deg,#2563EB,#16A34A)"></i></div><div class="mini-grid"><div class="metric"><b>${Math.round(chapters.length?done/chapters.length*100:0)}%</b><span>Chapter milestones</span></div><div class="metric"><b>${mdone}/${mocks.length}</b><span>Mocks completed</span></div><div class="metric"><b>${overdue}</b><span>Overdue items</span></div><div class="metric"><b>${next?next.due:'—'}</b><span>Next deadline</span></div></div><p style="margin-top:10px">${cfg.note}</p><p class="hint">Suggested chapter window: ${cfg.start} → ${cfg.end}. Mock-test window: ${cfg.mockStart} → ${cfg.mockEnd}. Dates are editable item by item.</p></div>
+ <h2>Chapter sequence</h2><p class="hint">Work top-to-bottom in each subject. A chapter deadline means: core theory + examples + exam-style questions + quick error review. If a chapter is new or difficult, split it across sessions and update the date.</p>
+ <div class="seg">${subjects.map(su=>`<button class="${roadSub===su?'sel':''}" onclick="roadSub='${su}';render()">${su}</button>`).join('')}</div>
+ ${selected.map(renderItem).join('')||'<p class="empty">No chapters in this subject for the selected exam track.</p>'}
+ <h2>Mock-test calendar</h2><p class="hint">Take the test under timed conditions, then spend at least as much attention reviewing errors as you spent on the test.</p>
+ ${mocks.sort((a,b)=>a.due.localeCompare(b.due)).map(renderItem).join('')}
+ <div class="card"><b>How to use the deadlines</b><p>1. Complete the next chapter in order. 2. Tick it only after questions are solved. 3. Take each scheduled mock even if the syllabus is incomplete; use the result to choose revision priorities. 4. If you fall behind, move dates realistically instead of marking unfinished work complete.</p><p class="hint">The chapter list follows the tracker's existing syllabus lists. Verify the current official exam syllabus and dates; removed/changed topics should be skipped or replaced.</p></div>`;
+}
+
+function vRev(){
+  let any=false;
+  const html=Object.keys(SYL).map(su=>{const cs=list(su).filter(c=>{const b=bits(su,c.n);return b[0]==="1"&&b[1]==="1"});if(!cs.length)return"";any=true;
+    return `<h2>${su}</h2>`+cs.map(c=>{const r=S.rv[key(su,c.n)]||"00000",fin=r==="11111";return `<div class="card ${fin?"fin":""}"><div class="row"><b class="grow">${esc(c.n)}</b>${fin?`<span class="tag" style="color:var(--ok)">Revision done ✅</span>`:`<span class="tag" style="color:var(--mute)">${[...r].filter(x=>x==="1").length}/5</span>`}</div><div class="st" style="grid-template-columns:repeat(5,1fr)">${[0,1,2,3,4].map(j=>`<button class="${r[j]==="1"?"on":""}" aria-pressed="${r[j]==="1"}" data-s="${esc(su)}" data-n="${esc(c.n)}" data-j="${j}" onclick="rv(this)">${j+1}</button>`).join("")}</div></div>`}).join("")}).join("");
+  return `<h1>Revision</h1><p>A chapter appears here once its Theory and Questions are ticked. Tick 1 to 5 as you revise it. All five ticked means revision is done.</p>`+(any?html:`<div class="empty">No chapters yet. Tick Theory and Questions in the Syllabus tab first.</div>`);
+}
+function spiderCard(){
+  const subs=Object.keys(SYL), totalStages=subs.reduce((a,su)=>a+list(su).length*4,0), doneStages=subs.reduce((a,su)=>a+count(su),0);
+  const syllabus=totalStages?Math.round(doneStages/totalStages*100):0;
+  const revTotal=subs.reduce((a,su)=>a+list(su).filter(c=>bits(su,c.n)[0]==="1"&&bits(su,c.n)[1]==="1").length*5,0);
+  const revDone=subs.reduce((a,su)=>a+list(su).reduce((n,c)=>n+[...(S.rv[key(su,c.n)]||"00000")].filter(x=>x==="1").length,0),0);
+  const revision=revTotal?Math.round(revDone/revTotal*100):0;
+  const tests=S.mocks.length?Math.min(100,Math.round(S.mocks.reduce((a,m)=>a+(m.o?m.s/m.o*100:0),0)/S.mocks.length)):0;
+  const backlogPct=S.tasks.length?Math.round(100*Math.max(0,S.tasks.length-backlog().length)/S.tasks.length):100;
+  const daily=S.tasks.filter(t=>t.date===today()).length?Math.round(sum(S.tasks.filter(t=>t.date===today()&&t.done))/Math.max(1,sum(S.tasks.filter(t=>t.date===today())))*100):0;
+  const journal=S.journal.filter(j=>j.date===today()).length*50;
+  const vals=[syllabus,tests,revision,backlogPct,daily,journal], labels=["Syllabus","Tests","Revision","Backlog","Daily plan","Journal"];
+  const cx=160,cy=145,R=105;
+  const point=(i,r)=>{const a=(-Math.PI/2)+i*2*Math.PI/6;return `${(cx+Math.cos(a)*r).toFixed(1)},${(cy+Math.sin(a)*r).toFixed(1)}`};
+  const rings=[.25,.5,.75,1].map(k=>`<polygon points="${labels.map((_,i)=>point(i,R*k)).join(' ')}" fill="none" stroke="var(--line)" stroke-width="1"/>`).join('');
+  const axes=labels.map((_,i)=>`<line x1="${cx}" y1="${cy}" x2="${point(i,R).split(',')[0]}" y2="${point(i,R).split(',')[1]}" stroke="var(--line)"/>`).join('');
+  const shape=labels.map((_,i)=>point(i,R*vals[i]/100)).join(' ');
+  const texts=labels.map((l,i)=>{const a=-Math.PI/2+i*2*Math.PI/6,x=cx+Math.cos(a)*(R+28),y=cy+Math.sin(a)*(R+24);return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#172554" font-size="10" font-weight="700">${l}</text><text x="${(cx+Math.cos(a)*(R*.72)).toFixed(1)}" y="${(cy+Math.sin(a)*(R*.72)).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="#EA580C" font-size="10" font-weight="800">${vals[i]}%</text>`}).join('');
+  return `<div class="card"><div class="row"><b class="grow">Progress Spider Web</b><span class="tag">Live</span></div><p>Six areas of your preparation at a glance.</p><div class="spider-wrap"><svg viewBox="0 0 320 290" role="img" aria-label="Spider web progress chart">${rings}${axes}<polygon points="${shape}" fill="#7C3AED" fill-opacity=".25" stroke="#2563EB" stroke-width="3"/>${texts}</svg></div><p class="hint">Tests = average score percentage · Backlog = tasks not overdue · Journal = today's check-ins.</p></div>`;
+}
+function exportBackup(){
+  try{const data={app:"PCM Tracker",version:1,exportedAt:new Date().toISOString(),state:S};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='pcm-tracker-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){alert('Backup export failed. Please try another browser.')}
+}
+function importBackup(input){const file=input.files&&input.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(reader.result);const incoming=parsed.state||parsed;if(!incoming||typeof incoming!=="object"||!incoming.ch||!incoming.tasks)throw new Error('Invalid backup');if(!confirm('Restore this backup? Current tracker data will be replaced.')){input.value='';return}S=Object.assign({exam:"m",ch:{},rv:{},nc:{},pq:{},days:{},mocks:[],mist:[],target:"",tasks:[],journal:[],board:{},boardMocks:[],pyqRecords:[],roadmap:{}},incoming);if(!S.roadmap)S.roadmap={};if(!S.board)S.board={};if(!S.boardMocks)S.boardMocks=[];if(!S.pyqRecords)S.pyqRecords=[];save();render();alert('Backup restored successfully.')}catch(e){alert('This backup file is not valid for PCM Tracker.')}input.value=''};reader.readAsText(file)}
+function readinessCard(){
+  const subs=Object.keys(SYL),allStages=subs.reduce((n,su)=>n+list(su).length*4,0),doneStages=subs.reduce((n,su)=>n+count(su),0);
+  const jeeSyllabus=allStages?Math.round(doneStages/allStages*100):0;
+  const avgTest=S.mocks.length?Math.round(S.mocks.reduce((n,m)=>n+(m.o?m.s/m.o*100:0),0)/S.mocks.length):0;
+  const jeeScore=Math.round(jeeSyllabus*.65+avgTest*.35);
+  const boardTotal=Object.keys(BOARD_SUBJECTS).reduce((n,su)=>n+BOARD_SUBJECTS[su].length*BOARD_STAGES.length,0);
+  const boardDoneCount=Object.keys(BOARD_SUBJECTS).reduce((n,su)=>n+BOARD_SUBJECTS[su].reduce((a,ch)=>a+BOARD_STAGES.reduce((b,st)=>b+(boardDone(su,ch,st)?1:0),0),0),0);
+  const boardPct=boardTotal?Math.round(boardDoneCount/boardTotal*100):0;
+  const boardMockAvg=(S.boardMocks||[]).length?Math.round(S.boardMocks.reduce((n,m)=>n+m.score/Math.max(1,m.outof)*100,0)/S.boardMocks.length):0;
+  const hscScore=Math.round(boardPct*.7+boardMockAvg*.3);
+  return `<div class="card"><b>Readiness indicators</b><p class="hint">Progress indicators, not predicted exam marks or a guarantee of results.</p><div style="margin-top:10px"><div class="row"><span class="grow">JEE preparation index</span><b>${jeeScore}%</b></div><div class="bar"><i style="width:${jeeScore}%;background:linear-gradient(90deg,#2563EB,#7C3AED)"></i></div><p class="hint">65% syllabus stages · 35% average mock percentage</p></div><div style="margin-top:14px"><div class="row"><span class="grow">HSC board preparation index</span><b>${hscScore}%</b></div><div class="bar"><i style="width:${hscScore}%;background:linear-gradient(90deg,#16A34A,#4ADE80)"></i></div><p class="hint">70% board checkpoints · 30% average board mock percentage</p></div></div>`;
+}
+function priorityCard(){
+  const items=[];
+  const overdue=backlog();if(overdue.length)items.push({rank:1,title:`Clear ${overdue.length} overdue task(s)`,detail:'Move only the most important overdue task to today; avoid copying the entire backlog.'});
+  const openMist=(S.mist||[]).filter(m=>!m.fix);if(openMist.length)items.push({rank:2,title:`Review ${openMist.length} unresolved test mistake(s)`,detail:'Fix the cause and solve one similar question before ticking it complete.'});
+  const weak=[];Object.keys(SYL).forEach(su=>list(su).forEach(c=>{const r=S.rv[key(su,c.n)]||'00000';if(bits(su,c.n)[0]==='1'&&bits(su,c.n)[1]==='1'&&r!=='11111')weak.push({su,ch:c.n,n:[...r].filter(x=>x==='1').length})}));
+  if(weak.length){weak.sort((a,b)=>a.n-b.n);items.push({rank:3,title:`Revise ${weak[0].ch}`,detail:`${weak[0].su}: revision checkpoints ${weak[0].n}/5. Use active recall, then solve questions.`})}
+  if(!items.length)items.push({rank:1,title:'Set a focused target for today',detail:'Add one Theory/Questions task, then solve questions and record the result.'});
+  return `<div class="card"><div class="row"><b class="grow">Suggested next actions</b><span class="pill">Personalized</span></div>${items.slice(0,4).map(x=>`<div class="topic-row"><b>${esc(x.title)}</b><p>${esc(x.detail)}</p></div>`).join('')}</div>`;
+}
+
+function vHome(){
+  const l=S.tasks.filter(t=>t.date===today()),total=sum(l),done=sum(l.filter(t=>t.done)),bl=backlog(),subs=Object.keys(SYL);
+  const fin=subs.reduce((a,su)=>a+list(su).filter(c=>bits(su,c.n)==="1111").length,0),nch=subs.reduce((a,su)=>a+list(su).length,0);
+  const bars=subs.map(su=>{const n=list(su).length*4,p=Math.round(count(su)/n*100);return `<div style="margin:10px 0"><div class="row"><span class="grow">${su}</span><b>${p}%</b></div><div class="bar ${p===100?"full":""}"><i style="width:${p}%"></i></div></div>`}).join("");
+  return `<h1>Home</h1><p>${new Date().toDateString()}</p>${cd()}${spiderCard()}${readinessCard()}${priorityCard()}
+  <div class="card"><div class="row"><b class="grow">HSC board progress</b><button class="ghost small" onclick="setTab('board')">Open boards</button></div><p>Track written answers, derivations, board PYQs, practicals and timed papers separately from JEE.</p></div>
+  <div class="card"><div class="row"><b class="grow">Exam deadline roadmap</b><button class="ghost small" onclick="setTab('road')">Open roadmap</button></div><p>Follow chapter-by-chapter deadlines and scheduled mock tests for JEE Main, HSC Boards, MHT-CET and JEE Advanced.</p></div>
+  <div class="card"><div class="row"><b class="grow">Today's target</b><b>${done}/${total||100} pts</b></div>${l.length?l.map(t=>`<div class="row ${t.done?"done":""}" style="margin-top:6px"><span>${t.done?"✅":"⬜"}</span><span class="grow t">${esc(t.title)}</span><span>${t.pts}</span></div>`).join(""):`<p>Nothing planned yet.</p>`}<button class="ghost small" style="margin-top:10px" onclick="setTab('plan')">${l.length?"Edit today":"Set today's target"}</button></div>
+  <div class="card"><div class="row"><b class="grow">Backlog</b><b class="${bl.length?"tag":""}">${bl.length} pending</b></div>${bl.slice(0,3).map(t=>`<p>• ${esc(t.title)} <span class="tag">${t.date}</span></p>`).join("")||`<p>All clear.</p>`}${bl.length?`<button class="ghost small" style="margin-top:10px" onclick="setTab('plan')">Open backlog</button>`:""}</div>
+  <div class="card"><div class="row"><b class="grow">${EX[S.exam]} chapters</b><b>${fin}/${nch} done</b></div>${bars}<button class="ghost small" onclick="setTab('syl')">Open syllabus</button></div>
+  <div class="card"><b>Data backup & restore</b><p>Progress saves in this browser automatically. Export a backup regularly in case browser data is cleared.</p><div class="backup-actions" style="margin-top:10px"><button onclick="exportBackup()">Export backup</button><button class="ghost" onclick="document.getElementById('backupFile').click()">Restore backup</button></div><input id="backupFile" type="file" accept="application/json,.json" style="display:none" onchange="importBackup(this)"><p class="hint">Restore replaces current data with the backup you select.</p></div>`;
+}
+function del(id){S.tasks=S.tasks.filter(x=>x.id!==id);mark();save();render()}
+
+function vBack(){
+  const l=backlog();
+  return `<h2>Backlog</h2><p>Tasks you didn't finish on earlier days land here automatically.</p>`+(l.length?l.map(t=>`<div class="card"><div class="row"><div class="grow">${esc(t.title)}<div class="tag">Missed on ${t.date}</div></div><div class="pts">${t.pts}</div></div><div class="row" style="margin-top:8px"><button class="small" onclick="mv('${t.id}')">Move to today</button><button class="ghost small" onclick="del('${t.id}')">Drop</button></div></div>`).join(""):`<div class="empty">Backlog is clear.</div>`);
+}
+function mv(id){S.tasks.find(x=>x.id===id).date=today();mark();save();setTab("plan")}
+
+function vJour(){
+  const slot=new Date().getHours()<13?"1 PM check-in":"8 PM check-in",rec=S.journal.slice(-6).reverse(),got=S.journal.some(j=>j.date===today()&&j.slot===slot),n=S.journal.filter(j=>j.date===today()).length;
+  return `<h1>Journal</h1><p>Two short check-ins a day: 1 PM and 8 PM.</p>
+  ${got?`<div class="card fin"><b>${slot} done ✅</b><p>${n}/2 check-ins today. ${slot[0]==="1"?"Come back this evening for the 8 PM one.":"See you tomorrow."}</p></div>`:`<div class="card"><b>${slot}</b><p>How focused do you feel? (1 low, 5 high)</p>
+  <div class="rate">${[1,2,3,4,5].map(n=>`<button class="${rating===n?"sel":""}" onclick="rating=${n};render()">${n}</button>`).join("")}</div>
+  <textarea id="jt" placeholder="What went well? What got in the way?"></textarea><button style="margin-top:8px" onclick="addJ('${slot}')">Save entry</button></div>`}
+  <h2>Recent entries</h2>`+(rec.length?rec.map(j=>`<div class="card"><b>${j.date} · ${j.slot}</b> — ${j.rating}/5<p>${esc(j.text)}</p></div>`).join(""):`<div class="empty">No entries yet.</div>`);
+}
+function addJ(slot){if(!rating||S.journal.some(j=>j.date===today()&&j.slot===slot))return;S.journal.push({date:today(),slot,rating,text:$("jt").value.trim()});rating=0;save();render()}
+lastDay=today();render();
+window.addEventListener("pagehide",save);window.addEventListener("beforeunload",save);document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")save()});
+const chk=()=>{if(today()!==lastDay){lastDay=today();render()}};
+setInterval(chk,30000);document.addEventListener("visibilitychange",chk);
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("Offline support registration failed",e)))}
+</script>
+</body>
+</html>
